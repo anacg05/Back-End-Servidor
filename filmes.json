@@ -1,0 +1,20 @@
+[
+    {
+        "filme": "Interestellar",
+        "atores": "Matthew, McConaughey, Anne Hathaway, Jessica Chastain, Ellen Burstyn, John Lithgow, Michael Caine",
+        "diretor": "Christopher Nolan",
+        "ano": "2014",
+        "genero": "ficção científica, aventura",
+        "produtora": "Emma Thomas",
+        "sinopse": "Em um futuro onde a Terra está inabitável, o ex-piloto Cooper lidera uma missão espacial através de um buraco de minhoca para encontrar um novo planeta habitável, deixando sua família para trás."
+    },
+    {
+        "filme": "Carros",
+        "atores": "Mcqueen, Sally, Mate",
+        "diretor": "John Lasseter",
+        "ano": "2006",
+        "genero": "animação, aventura, comédia",
+        "produtora": "Darla K. Anderson",
+        "sinopse": "Ao viajar para a Califórnia, o famoso carro de corridas Relâmpago McQueen se perde e vai parar em Radiator Springs, uma cidadezinha na Rota 66. Ele conhece novos amigos e aprende lições que mudam sua forma de encarar a vida."
+    }
+]

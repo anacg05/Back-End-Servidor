@@ -72,7 +72,7 @@ h2 {
   box-shadow: var(--shadow);
   margin: 20px auto;
   width: 100%;
-  max-width: 800px;
+  max-width: 70%;
 }
 
 .containerPrincipal {
@@ -244,4 +244,51 @@ footer {
   .botaoSecundario {
     font-size: 1rem;
   }
+}
+
+/* ===== CARDS DE FILMES ===== */
+
+.listaFilmes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(300px, 1fr)); 
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+
+.cardFilme {
+  background: var(--card-color);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  padding: 0.7rem;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;               
+  flex-direction: column;
+  justify-content: flex-start; 
+  max-height: 350px;      /* limita a altura total */
+  overflow-y: auto; 
+}
+
+
+.cardFilme:hover {
+  transform: translateY(-4px);
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.cardFilme h3 {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+
+.cardFilme .anoFilme {
+  font-size: 1rem;
+  color: var(--muted-color);
+}
+
+.cardFilme p {
+  margin: 0.2rem 0;   
+  font-size: 0.95rem;
+  color: var(--text-color);
 }

@@ -17,12 +17,12 @@
         <section class="containerPrincipalCadastro">
             <h2>Cadastrar Novo Filme</h2>
 
-            <form action="/cadastro">
+            <form action="/cadastro" method="post">
                 <div class="formularioCadastro">
                     <div class="colunaCadastro">
                         <fieldset class="campoFormulario">
-                            <label for="nomeFilme" class="labelFormulario">Nome do Filme:</label>
-                            <input type="text" id="nomeFilme" name="nomeFilme" class="inputFormulario"
+                            <label for="filme" class="labelFormulario">Nome do Filme:</label>
+                            <input type="text" id="filme" name="filme" class="inputFormulario"
                                 placeholder="Digite o nome do filme" />
                         </fieldset>
 
@@ -67,7 +67,8 @@
                 </div>
 
                 <div class="botoesCadastro">
-                    <a href="index.html " class="botaoSecundario">Voltar à Página Inicial</a>
+                    <a href="/" class="botaoSecundario">Voltar à Página Inicial</a>
+                    <a href="/listarfilmes" class="botaoSecundario">Ver Filmes Cadastrados</a>
                     <button type="submit" class="botaoPrimario">Cadastrar Filme</button>
                 </div>
             </form>
@@ -77,7 +78,6 @@
     <footer>
         <p>&copy; 2025 Filmes - Sistema de Gerenciamento de Filmes</p>
         <p>Criado por Ana Clara Grizotto</p>
-
     </footer>
 </body>
 
