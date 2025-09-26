@@ -54,8 +54,8 @@ class MyHandle(SimpleHTTPRequestHandler):
             self.serve_html("login.html")
         elif self.path == "/cadastro":
             self.serve_html("cadastro.html")
-        elif self.path == "/listarfilmes":
-            self.serve_filmes()
+        elif self.path == "/listar_filmes":
+            self.serve_html("listar_filmes.html")
         else:
             super().do_GET()
 
@@ -70,67 +70,67 @@ class MyHandle(SimpleHTTPRequestHandler):
         except FileNotFoundError:
             self.send_error(404, "File Not Found")
 
-    def serve_filmes(self):
-        filmes = carregar_filmes()
-        print(filmes)
-        html = """
-        <!DOCTYPE html>
-        <html lang="pt-BR">
-        <head>
-            <meta charset="UTF-8">
-            <title>Filmes Cadastrados</title>
-            <link rel="stylesheet" href="style.css">
-        </head>
-        <body>
-            <header>
-                <h1>Filmes</h1>
-            </header>
-            <main>
-                <section class="containerPrincipalCadastro">
-                    <h2>Filmes Cadastrados</h2>
-        """
+    # def serve_filmes(self):
+    #     filmes = carregar_filmes()
+    #     print(filmes)
+    #     html = """
+    #     <!DOCTYPE html>
+    #     <html lang="pt-BR">
+    #     <head>
+    #         <meta charset="UTF-8">
+    #         <title>Filmes Cadastrados</title>
+    #         <link rel="stylesheet" href="style.css">
+    #     </head>
+    #     <body>
+    #         <header>
+    #             <h1>Filmes</h1>
+    #         </header>
+    #         <main>
+    #             <section class="containerPrincipalCadastro">
+    #                 <h2>Filmes Cadastrados</h2>
+    #     """
 
-        if filmes:
-            html += '<div class="listaFilmes">'
-            for f in filmes:
-                html += f"""
-                <div class="cardFilme">
-                    <h3>{f['filme']} <span class="anoFilme">({f['ano']})</span></h3>
-                    <p><strong>Diretor:</strong> {f['diretor']}</p>
-                    <p><strong>Gênero:</strong> {f['genero']}</p>
-                    <p><strong>Produtora:</strong> {f['produtora']}</p>
-                    <p><strong>Atores:</strong> {f['atores']}</p>
-                    <p><strong>Sinopse:</strong> {f['sinopse']}</p>
-                </div>
-                """
-            html += "</div>"  # fecha listaFilmes
-        else:
-            html += """
-            <article class="mensagemVazia">
-                <p>Não há filmes cadastrados no momento.</p>
-                <p>Comece adicionando seu primeiro filme ao sistema!</p>
-            </article>
-            """
+    #     if filmes:
+    #         html += '<div class="listaFilmes">'
+    #         for f in filmes:
+    #             html += f"""
+    #             <div class="cardFilme">
+    #                 <h3>{f['filme']} <span class="anoFilme">({f['ano']})</span></h3>
+    #                 <p><strong>Diretor:</strong> {f['diretor']}</p>
+    #                 <p><strong>Gênero:</strong> {f['genero']}</p>
+    #                 <p><strong>Produtora:</strong> {f['produtora']}</p>
+    #                 <p><strong>Atores:</strong> {f['atores']}</p>
+    #                 <p><strong>Sinopse:</strong> {f['sinopse']}</p>
+    #             </div>
+    #             """
+    #         html += "</div>"  # fecha listaFilmes
+    #     else:
+    #         html += """
+    #         <article class="mensagemVazia">
+    #             <p>Não há filmes cadastrados no momento.</p>
+    #             <p>Comece adicionando seu primeiro filme ao sistema!</p>
+    #         </article>
+    #         """
 
-        html += """
-                    <nav class="navegacao">
-                        <a href="/cadastro" class="botaoSecundario">Cadastrar Novo Filme</a>
-                        <a href="/" class="botaoSecundario">Voltar à Página Inicial</a>
-                    </nav>
-                </section>
-            </main>
-            <footer>
-                <p>&copy; 2025 Filmes - Sistema de Gerenciamento de Filmes</p>
-                <p>Criado por Ana Clara Grizotto</p>
-            </footer>
-        </body>
-        </html>
-        """
+    #     html += """
+    #                 <nav class="navegacao">
+    #                     <a href="/cadastro" class="botao">Cadastrar Novo Filme</a>
+    #                     <a href="/" class="botao">Voltar à Página Inicial</a>
+    #                 </nav>
+    #             </section>
+    #         </main>
+    #         <footer>
+    #             <p>&copy; 2025 Filmes - Sistema de Gerenciamento de Filmes</p>
+    #             <p>Criado por Ana Clara Grizotto</p>
+    #         </footer>
+    #     </body>
+    #     </html>
+    #     """
 
-        self.send_response(200)
-        self.send_header("Content-type", "text/html; charset=utf-8")
-        self.end_headers()
-        self.wfile.write(html.encode('utf-8'))
+    #     self.send_response(200)
+    #     self.send_header("Content-type", "text/html; charset=utf-8")
+    #     self.end_headers()
+    #     self.wfile.write(html.encode('utf-8'))
 
 
     # Rotas POST
