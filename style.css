@@ -185,6 +185,40 @@ button.botao:hover {
 }
 
 
+/* ===== BOTÕES (versão compacta) ===== */
+.botaoPequeno {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;  
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  text-align: center;
+  transition: 0.3s ease;
+  cursor: pointer;
+
+  width: 100%;
+  max-width: 90px;   /* mais estreito que o padrão */
+  margin: 0.5rem 0.2rem; /* espaço vertical entre botões */
+  
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  color: white;
+  border: none;
+  box-shadow: var(--shadow);
+}
+
+.botaoPequeno:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.acoesCard{
+  align-items: center;
+  margin-left: 80px;
+  margin-top: 10px;
+}
+
+
 /* ===== LINKS ===== */
 .linkEsqueceuSenha {
   font-size: 0.9rem;
@@ -265,7 +299,7 @@ footer {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  max-height: 400px;
+  max-height: 500px;
   overflow-y: auto;
 }
 
