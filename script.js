@@ -1,7 +1,7 @@
 async function carregarFilmes() {
   try {
-    // Pega os dados do JSON
-    const resposta = await fetch("filmes.json");
+    // Pega os dados do backend (rota que retorna os filmes do banco de dados)
+    const resposta = await fetch("/listar_filmes");
     const filmes = await resposta.json();
 
     const container = document.getElementById("listaFilmes");
