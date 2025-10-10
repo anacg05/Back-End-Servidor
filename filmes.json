@@ -25,5 +25,14 @@
         "genero": " Animação, Terror, Mistério, Fantasia",
         "produtora": " Laika, Focus Features, Pandemonium",
         "sinopse": "Coraline descobre uma porta para um mundo alternativo onde tudo parece perfeito, pais afetuosos e desejos realizados."
+    },
+    {
+        "filme": "Alvin e os Esquilos",
+        "atores": "Jason Lee, David Cross, Cameron, Richardson, Jane Lynch, Justin Long, Matthew Gray, Gubler, Jesse McCartney",
+        "diretor": "Tim Hill",
+        "ano": "2007",
+        "genero": "animação comédia",
+        "produtora": "Janice Karman",
+        "sinopse": "Quando a árvore em que moram é derrubada e enviada para Los Angeles, os esquilos falantes Alvin, Simon e Theodore encontram um novo lar na casa do compositor Dave Seville (Antti Jaakola). Apesar de um início conturbado com a nova situação doméstica, Dave descobre que as criaturas travessas sabem cantar muito bem."
     }
 ]

@@ -1,7 +1,12 @@
+// Carrega e exibe os filmes
 async function carregarFilmes() {
   try {
+<<<<<<< HEAD
     // Pega os dados do backend (rota que retorna os filmes do banco de dados)
     const resposta = await fetch("/listar_filmes");
+=======
+    const resposta = await fetch("/filmes.json");
+>>>>>>> e867af6a9f71d7f0b80feb238ff98acc5bbdcd8f
     const filmes = await resposta.json();
 
     const container = document.getElementById("listaFilmes");
@@ -17,8 +22,7 @@ async function carregarFilmes() {
       return;
     }
 
-    // Monta os cards
-    filmes.forEach(f => {
+    filmes.forEach((f, index) => {
       const card = document.createElement("div");
       card.classList.add("cardFilme");
 
@@ -29,6 +33,10 @@ async function carregarFilmes() {
         <p><strong>Produtora:</strong> ${f.produtora}</p>
         <p><strong>Atores:</strong> ${f.atores}</p>
         <p><strong>Sinopse:</strong> ${f.sinopse}</p>
+        <div class="acoesCard">
+          <button class="botaoPequeno" onclick="editarFilme(${index})">Editar</button>
+          <button class="botaoPequeno" onclick="deletarFilme(${index})">Excluir</button>
+        </div>
       `;
 
       container.appendChild(card);
@@ -38,5 +46,55 @@ async function carregarFilmes() {
   }
 }
 
-// Executa ao abrir a página
+// Função para excluir filme
+async function deletarFilme(index) {
+  if (!confirm("Tem certeza que deseja excluir este filme?")) return;
+
+  const resposta = await fetch("/delete", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: `index=${index}`
+  });
+
+  alert(await resposta.text());
+  carregarFilmes();
+}
+
+// Função para editar filme
+async function editarFilme(index) {
+  const resposta = await fetch("/filmes.json");
+  const filmes = await resposta.json();
+  const filme = filmes[index];
+
+  // cria um prompt rápido para edição (pode ser melhorado com modal/form)
+  const novoFilme = prompt("Nome do filme:", filme.filme) || filme.filme;
+  const novosAtores = prompt("Atores:", filme.atores) || filme.atores;
+  const novoDiretor = prompt("Diretor:", filme.diretor) || filme.diretor;
+  const novoAno = prompt("Ano:", filme.ano) || filme.ano;
+  const novoGenero = prompt("Gênero:", filme.genero) || filme.genero;
+  const novaProdutora = prompt("Produtora:", filme.produtora) || filme.produtora;
+  const novaSinopse = prompt("Sinopse:", filme.sinopse) || filme.sinopse;
+
+  const params = new URLSearchParams({
+    index,
+    filme: novoFilme,
+    atores: novosAtores,
+    diretor: novoDiretor,
+    ano: novoAno,
+    genero: novoGenero,
+    produtora: novaProdutora,
+    sinopse: novaSinopse
+  });
+
+  const resp = await fetch("/edit", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: params.toString()
+  });
+
+  alert(await resp.text());
+  carregarFilmes();
+}
+
+// Carrega os filmes ao abrir a página
 carregarFilmes();
