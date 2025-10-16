@@ -5,21 +5,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
-  <title>Filmes</title>
+  <title>Filmes Cadastrados</title>
 </head>
 
 <body>
   <header>
-    <h1>Catálogo de Filmes</h1>
+    <h1>Filmes</h1>
   </header>
 
   <main>
-    <section class="containerPrincipal">
-      <h2>Bem-vindo ao Sistema de Gerenciamento de Filmes</h2>
-      <nav class="botaoContainer">
-        <a href="/login" class="botao">Fazer Login</a>
+    <section class="containerPrincipalCadastro">
+      <h2>Filmes Cadastrados</h2>
+
+      <div id="listaFilmes" class="listaFilmes"></div>
+
+      <nav class="navegacao">
         <a href="/cadastro" class="botao">Cadastrar Novo Filme</a>
-        <a href="/listarfilmes" class="botao">Ver Filmes Cadastrados</a>
+        <a href="/" class="botao">Voltar à Página Inicial</a>
       </nav>
     </section>
   </main>
@@ -28,6 +30,8 @@
     <p>&copy; 2025 Filmes - Sistema de Gerenciamento de Filmes</p>
     <p>Criado por Ana Clara Grizotto</p>
   </footer>
+
+  <script src="script.js"></script>
 </body>
 
 </html>

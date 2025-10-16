@@ -1,200 +1,114 @@
 import os
 import json
 from http.server import SimpleHTTPRequestHandler, HTTPServer
-from urllib.parse import parse_qs
-import mysql.connector  # pip install mysql-connector-python
+import mysql.connector
+import datetime
+import decimal
 
-# Conectar ao banco de dados
+# 🔹 Conexão com o banco MySQL
 mydb = mysql.connector.connect(
     host="localhost",
     user="root",
     password="senai",
-    database="webserver_filmes_anacg"  # Adicionando o nome do banco de dados
+    database="webserver_filmes_anacg"
 )
 
-# Função auxiliar para carregar filmes do banco de dados
+# 🔹 Função para buscar os filmes no banco
 def carregar_filmes():
-<<<<<<< HEAD
-    cursor = mydb.cursor(dictionary=True)  # Usar dictionary=True para retornar como dicionários
-    cursor.execute("SELECT * FROM Filme")
+    cursor = mydb.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT 
+            f.id_filme,
+            f.titulo,
+            f.tempo_duracao,
+            f.ano,
+            GROUP_CONCAT(DISTINCT l.linguagem SEPARATOR ', ') AS linguagem,
+            GROUP_CONCAT(DISTINCT g.genero SEPARATOR ', ') AS genero,
+            GROUP_CONCAT(DISTINCT p.produtora SEPARATOR ', ') AS produtora,
+            GROUP_CONCAT(DISTINCT pa.pais SEPARATOR ', ') AS pais,
+            GROUP_CONCAT(DISTINCT CONCAT(d.nome, ' ', d.sobrenome) SEPARATOR ', ') AS diretor,
+            GROUP_CONCAT(DISTINCT CONCAT(a.nome, ' ', a.sobrenome) SEPARATOR ', ') AS atores
+        FROM Filme f
+        LEFT JOIN Linguagem l ON f.id_linguagem = l.id_linguagem
+        LEFT JOIN Filme_Genero fg ON f.id_filme = fg.id_filme
+        LEFT JOIN Genero g ON fg.id_genero = g.id_genero
+        LEFT JOIN Filme_Produtora fp ON f.id_filme = fp.id_filme
+        LEFT JOIN Produtora p ON fp.id_produtora = p.id_produtora
+        LEFT JOIN Filme_Pais fp2 ON f.id_filme = fp2.id_filme
+        LEFT JOIN Pais pa ON fp2.id_pais = pa.id_pais
+        LEFT JOIN Filme_Diretor fd ON f.id_filme = fd.id_filme
+        LEFT JOIN Diretor d ON fd.id_diretor = d.id_diretor
+        LEFT JOIN Filme_Ator fa ON f.id_filme = fa.id_filme
+        LEFT JOIN Ator a ON fa.id_ator = a.id_ator
+        GROUP BY f.id_filme
+        ORDER BY f.ano DESC;
+    """)
     result = cursor.fetchall()
     return result
-=======
-    if os.path.exists(ARQUIVO_JSON):
-        with open(ARQUIVO_JSON, "r", encoding="utf-8") as f:
-            try:
-                return json.load(f)
-            except json.JSONDecodeError:
-                return []
-    return []
 
-# Função auxiliar para salvar filmes no JSON
-def salvar_filmes(filmes):
-    with open(ARQUIVO_JSON, "w", encoding="utf-8") as f:
-        json.dump(filmes, f, ensure_ascii=False, indent=4)
->>>>>>> e867af6a9f71d7f0b80feb238ff98acc5bbdcd8f
+# 🔹 Classe do servidor
+class MyHandler(SimpleHTTPRequestHandler):
 
-# Classe do servidor
-class MyHandle(SimpleHTTPRequestHandler):
-    def list_directory(self, path):
-        """Sempre abre o index.html como página inicial"""
-        try:
-            with open(os.path.join(path, 'index.html'), encoding='utf-8') as f:
-                self.send_response(200)
-                self.send_header("Content-type", "text/html")
-                self.end_headers()
-                self.wfile.write(f.read().encode('utf-8'))
-                return None
-        except FileNotFoundError:
-            pass
-        return super().list_directory(path)
-<<<<<<< HEAD
-    
-    # Rota GET para retornar filmes do banco de dados como JSON
     def do_GET(self):
+        # ✅ Rota de API (JSON)
         if self.path == "/listar_filmes":
-            filmes = carregar_filmes()  # Puxa filmes do banco de dados
-            self.send_response(200)
-            self.send_header("Content-type", "application/json")
-            self.end_headers()
-            self.wfile.write(json.dumps(filmes, ensure_ascii=False).encode('utf-8'))  # Retorna os filmes em formato JSON
-        else:
-            super().do_GET()
+            try:
+                filmes = carregar_filmes()
 
-=======
+                def default_converter(obj):
+                    if isinstance(obj, (datetime.date, datetime.datetime)):
+                        return obj.isoformat()
+                    if isinstance(obj, datetime.timedelta):
+                        return str(obj)
+                    if isinstance(obj, decimal.Decimal):
+                        return float(obj)
+                    return str(obj)
 
-    def account_user(self, login, password):
-        loga = "anacg"
-        senha = 12345
-        return "Usuário Logado" if login == loga and senha == password else "Usuário não existe"
+                self.send_response(200)
+                self.send_header("Content-type", "application/json; charset=utf-8")
+                self.end_headers()
+                self.wfile.write(json.dumps(filmes, ensure_ascii=False, default=default_converter).encode('utf-8'))
+            except Exception as e:
+                self.send_error(500, f"Erro ao carregar filmes: {str(e)}")
+            return
 
-    # Rotas GET
-    def do_GET(self):
-        if self.path == "/login":
-            self.serve_html("login.html")
+        # ✅ Roteamento das páginas HTML
+        if self.path == "/" or self.path == "/index.html":
+            arquivo = "index.html"
         elif self.path == "/cadastro":
-            self.serve_html("cadastro.html")
-        elif self.path == "/listarfilmes":
-            self.serve_html("listar_filmes.html")
+            arquivo = "cadastro.html"
+        elif self.path in ["/listarfilmes", "/listarfilmes.html"]:
+            arquivo = "listarfilmes.html"
+        elif self.path == "/login":
+            arquivo = "login.html"
         else:
-            super().do_GET()
+            arquivo = self.path.lstrip("/")
 
-    def serve_html(self, filename):
+        # ✅ Servindo arquivos estáticos
         try:
-            with open(os.path.join(os.getcwd(), filename), encoding='utf-8') as f:
-                content = f.read()
-            self.send_response(200)
-            self.send_header("Content-type", "text/html; charset=utf-8")
-            self.end_headers()
-            self.wfile.write(content.encode('utf-8'))
+            with open(arquivo, "rb") as f:
+                if arquivo.endswith(".html"):
+                    tipo = "text/html"
+                elif arquivo.endswith(".css"):
+                    tipo = "text/css"
+                elif arquivo.endswith(".js"):
+                    tipo = "application/javascript"
+                else:
+                    tipo = "application/octet-stream"
+
+                self.send_response(200)
+                self.send_header("Content-type", f"{tipo}; charset=utf-8")
+                self.end_headers()
+                self.wfile.write(f.read())
+
         except FileNotFoundError:
-            self.send_error(404, "File Not Found")
+            self.send_error(404, f"Arquivo não encontrado: {arquivo}")
 
-    # Rotas POST
-    def do_POST(self):
-        if self.path == '/login':
-            content_length = int(self.headers['Content-length'])
-            body = self.rfile.read(content_length).decode('utf-8')
-            form_data = parse_qs(body)
-
-            login = form_data.get('usuario', [""])[0]
-            password = int(form_data.get('senha', ["0"])[0])
-            logou = self.account_user(login, password)
-
-            self.send_response(200)
-            self.send_header("Content-type", "text/html; charset=utf-8")
-            self.end_headers()
-            self.wfile.write(logou.encode('utf-8'))
-
-        elif self.path == '/cadastro':
-            content_length = int(self.headers['Content-length'])
-            body = self.rfile.read(content_length).decode('utf-8')
-            form_data = parse_qs(body)
-
-            # Captura dos dados
-            filme = form_data.get('filme', [""])[0]
-            atores = form_data.get('atores', [""])[0]
-            diretor = form_data.get('diretor', [""])[0]
-            ano = form_data.get('ano', [""])[0]
-            genero = form_data.get('genero', [""])[0]
-            produtora = form_data.get('produtora', [""])[0]
-            sinopse = form_data.get('sinopse', [""])[0]
-
-            # Carregar filmes existentes e adicionar novo
-            filmes = carregar_filmes()
-            filmes.append({
-                "filme": filme,
-                "atores": atores,
-                "diretor": diretor,
-                "ano": ano,
-                "genero": genero,
-                "produtora": produtora,
-                "sinopse": sinopse
-            })
-            salvar_filmes(filmes)
-
-            self.send_response(200)
-            self.send_header("Content-type", "text/html; charset=utf-8")
-            self.end_headers()
-            self.wfile.write("Filme cadastrado com sucesso!".encode('utf-8'))
-
-        elif self.path == '/delete':
-            content_length = int(self.headers['Content-length'])
-            body = self.rfile.read(content_length).decode('utf-8')
-            form_data = parse_qs(body)
-
-            index = int(form_data.get('index', [-1])[0])
-            filmes = carregar_filmes()
-
-            if 0 <= index < len(filmes):
-                removido = filmes.pop(index)
-                salvar_filmes(filmes)
-                resposta = f"Filme '{removido['filme']}' deletado com sucesso!"
-            else:
-                resposta = "Filme não encontrado."
-
-            self.send_response(200)
-            self.send_header("Content-type", "text/html; charset=utf-8")
-            self.end_headers()
-            self.wfile.write(resposta.encode('utf-8'))
-
-        elif self.path == '/edit':
-            content_length = int(self.headers['Content-length'])
-            body = self.rfile.read(content_length).decode('utf-8')
-            form_data = parse_qs(body)
-
-            index = int(form_data.get('index', [-1])[0])
-            filmes = carregar_filmes()
-
-            if 0 <= index < len(filmes):
-                filmes[index] = {
-                    "filme": form_data.get('filme', [""])[0],
-                    "atores": form_data.get('atores', [""])[0],
-                    "diretor": form_data.get('diretor', [""])[0],
-                    "ano": form_data.get('ano', [""])[0],
-                    "genero": form_data.get('genero', [""])[0],
-                    "produtora": form_data.get('produtora', [""])[0],
-                    "sinopse": form_data.get('sinopse', [""])[0]
-                }
-                salvar_filmes(filmes)
-                resposta = "Filme editado com sucesso!"
-            else:
-                resposta = "Filme não encontrado."
-
-            self.send_response(200)
-            self.send_header("Content-type", "text/html; charset=utf-8")
-            self.end_headers()
-            self.wfile.write(resposta.encode('utf-8'))
-
-        else:
-            super(MyHandle, self).do_POST()
-
->>>>>>> e867af6a9f71d7f0b80feb238ff98acc5bbdcd8f
-# Função principal para rodar o servidor
+# 🔹 Função principal
 def main():
     server_address = ('', 8000)
-    httpd = HTTPServer(server_address, MyHandle)
-    print("Server Running in http://localhost:8000")
+    httpd = HTTPServer(server_address, MyHandler)
+    print("✅ Servidor rodando em http://localhost:8000")
     httpd.serve_forever()
 
 if __name__ == "__main__":

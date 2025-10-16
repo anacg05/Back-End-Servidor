@@ -6,8 +6,7 @@ CREATE DATABASE webserver_filmes_anacg;
 
 USE webserver_filmes_anacg;
  
--- Ator
-
+-- ATOR
 CREATE TABLE Ator (
     id_ator INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
@@ -15,9 +14,8 @@ CREATE TABLE Ator (
     nacionalidade VARCHAR(255),
     genero ENUM('Masculino', 'Feminino', 'Outro', 'Não Informar') NOT NULL
 );
- 
--- Diretor
 
+-- DIRETOR
 CREATE TABLE Diretor (
     id_diretor INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
@@ -25,39 +23,32 @@ CREATE TABLE Diretor (
     nacionalidade VARCHAR(255),
     genero ENUM('Masculino', 'Feminino', 'Outro', 'Não Informar') NOT NULL
 );
- 
--- Produtora
 
+-- PRODUTORA
 CREATE TABLE Produtora (
     id_produtora INT AUTO_INCREMENT PRIMARY KEY,
     produtora VARCHAR(255) NOT NULL
 );
- 
--- País
 
+-- PAÍS
 CREATE TABLE Pais (
     id_pais INT AUTO_INCREMENT PRIMARY KEY,
     pais VARCHAR(255) NOT NULL
-
 );
- 
--- Linguagem
 
+-- LINGUAGEM
 CREATE TABLE Linguagem (
     id_linguagem INT AUTO_INCREMENT PRIMARY KEY,
     linguagem VARCHAR(255) NOT NULL
-
 );
- 
--- Gênero
 
+-- GÊNERO
 CREATE TABLE Genero (
     id_genero INT AUTO_INCREMENT PRIMARY KEY,
     genero VARCHAR(255) NOT NULL
 );
- 
--- Filme
 
+-- FILME
 CREATE TABLE Filme (
     id_filme INT AUTO_INCREMENT PRIMARY KEY,
     titulo VARCHAR(255) NOT NULL,
@@ -66,13 +57,9 @@ CREATE TABLE Filme (
     poster BLOB,
     id_linguagem INT,
     FOREIGN KEY (id_linguagem) REFERENCES Linguagem(id_linguagem)
-
 );
- 
--- TABELAS INTERMEDIARIAS
 
--- Filme_Ator
-
+-- TABELAS RELACIONADAS
 CREATE TABLE Filme_Ator (
     id_filme_ator INT AUTO_INCREMENT PRIMARY KEY,
     id_filme INT NOT NULL,
@@ -80,8 +67,6 @@ CREATE TABLE Filme_Ator (
     FOREIGN KEY (id_filme) REFERENCES Filme(id_filme),
     FOREIGN KEY (id_ator) REFERENCES Ator(id_ator)
 );
- 
--- Filme_Diretor
 
 CREATE TABLE Filme_Diretor (
     id_filme_diretor INT AUTO_INCREMENT PRIMARY KEY,
@@ -90,8 +75,6 @@ CREATE TABLE Filme_Diretor (
     FOREIGN KEY (id_filme) REFERENCES Filme(id_filme),
     FOREIGN KEY (id_diretor) REFERENCES Diretor(id_diretor)
 );
- 
--- Filme_Produtora
 
 CREATE TABLE Filme_Produtora (
     id_filme_produtora INT AUTO_INCREMENT PRIMARY KEY,
@@ -100,8 +83,6 @@ CREATE TABLE Filme_Produtora (
     FOREIGN KEY (id_filme) REFERENCES Filme(id_filme),
     FOREIGN KEY (id_produtora) REFERENCES Produtora(id_produtora)
 );
- 
--- Filme_Pais
 
 CREATE TABLE Filme_Pais (
     id_filme_pais INT AUTO_INCREMENT PRIMARY KEY,
@@ -110,8 +91,6 @@ CREATE TABLE Filme_Pais (
     FOREIGN KEY (id_filme) REFERENCES Filme(id_filme),
     FOREIGN KEY (id_pais) REFERENCES Pais(id_pais)
 );
- 
--- Filme_Genero 
 
 CREATE TABLE Filme_Genero (
     id_filme_genero INT AUTO_INCREMENT PRIMARY KEY,
@@ -119,8 +98,7 @@ CREATE TABLE Filme_Genero (
     id_genero INT NOT NULL,
     FOREIGN KEY (id_filme) REFERENCES Filme(id_filme),
     FOREIGN KEY (id_genero) REFERENCES Genero(id_genero)
-);
- 
+); 
  
  INSERT INTO Linguagem (linguagem) VALUES
 ('Inglês'),
@@ -187,7 +165,8 @@ INSERT INTO Ator (nome, sobrenome, nacionalidade, genero) VALUES
 ('Meryl', 'Streep', 'Americana', 'Feminino'),
 ('Tilda', 'Swinton', 'Britânica', 'Feminino'),
 ('Gong', 'Li', 'Chinesa', 'Feminino'),
-('Emily', 'Blunt', 'Britânica', 'Feminino');
+('Emily', 'Blunt', 'Britânica', 'Feminino'),
+('Tom', 'Hanks', 'Americano', 'Masculino');
 
 -- Inserir Diretor
 INSERT INTO Diretor (nome, sobrenome, nacionalidade, genero) VALUES 
@@ -209,7 +188,8 @@ INSERT INTO Diretor (nome, sobrenome, nacionalidade, genero) VALUES
 ('André', 'Øvredal', 'Norueguês', 'Masculino'),
 ('Wes', 'Anderson', 'Americano', 'Masculino'),
 ('Greta', 'Gerwig', 'Americana', 'Feminino'),
-('Guillermo', 'del Toro', 'Mexicano', 'Masculino');
+('Guillermo', 'del Toro', 'Mexicano', 'Masculino'),
+('Ridley', 'Scott', 'Britânico', 'Masculino');
 
 -- Inserir Produtora
 INSERT INTO Produtora (produtora) VALUES 
@@ -281,36 +261,117 @@ INSERT INTO Genero (genero) VALUES
 ('Biografia');
 
 -- Inserir Filme_Ator
+
 INSERT INTO Filme_Ator (id_filme, id_ator) VALUES
-(1, 1), (1, 2), (2, 3), (2, 4), (3, 5), (3, 6), (4, 7), (4, 8), 
-(5, 9), (6, 10), (7, 11), (8, 12), (9, 13), (10, 14), (11, 15), 
-(12, 16), (13, 17), (14, 18), (15, 19), (16, 20);
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5),
+(6, 6),
+(7, 7),
+(8, 8),
+(9, 9),
+(10, 10),
+(11, 11),
+(12, 12),
+(13, 13),
+(14, 14),
+(15, 15),
+(16, 16),
+(17, 17),
+(18, 18),
+(19, 19),
+(20, 20); 
 
 -- Inserir Filme_Diretor
 INSERT INTO Filme_Diretor (id_filme, id_diretor) VALUES
-(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8),
-(9, 9), (10, 10), (11, 11), (12, 12), (13, 13), (14, 14), (15, 15),
-(16, 16), (17, 17), (18, 18), (19, 19), (20, 20);
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5),
+(6, 6),
+(7, 7),
+(8, 8),
+(9, 9),
+(10, 10),
+(11, 11),
+(12, 12),
+(13, 13),
+(14, 14),
+(15, 15),
+(16, 16),
+(17, 17),
+(18, 18),
+(19, 19),
+(20, 20); 
 
 -- Inserir Filme_Produtora
 INSERT INTO Filme_Produtora (id_filme, id_produtora) VALUES
-(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8),
-(9, 9), (10, 10), (11, 11), (12, 12), (13, 13), (14, 14), (15, 15),
-(16, 16), (17, 17), (18, 18), (19, 19), (20, 20);
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5),
+(6, 6),
+(7, 7),
+(8, 8),
+(9, 9),
+(10, 10),
+(11, 11),
+(12, 12),
+(13, 13),
+(14, 14),
+(15, 15),
+(16, 16),
+(17, 17),
+(18, 18),
+(19, 19),
+(20, 20); 
 
 -- Inserir Filme_Pais
 INSERT INTO Filme_Pais (id_filme, id_pais) VALUES
-(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8),
-(9, 9), (10, 10), (11, 11), (12, 12), (13, 13), (14, 14), (15, 15),
-(16, 16), (17, 17), (18, 18), (19, 19), (20, 20);
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5),
+(6, 6),
+(7, 7),
+(8, 8),
+(9, 9),
+(10, 10),
+(11, 11),
+(12, 12),
+(13, 13),
+(14, 14),
+(15, 15),
+(16, 16),
+(17, 17),
+(18, 18),
+(19, 19),
+(20, 20); 
 
 -- Inserir Filme_Genero
 INSERT INTO Filme_Genero (id_filme, id_genero) VALUES
-(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8),
-(9, 9), (10, 10), (11, 11), (12, 12), (13, 13), (14, 14), (15, 15),
-(16, 16), (17, 17), (18, 18), (19, 19), (20, 20);
-
-
-
-
-
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5),
+(6, 6),
+(7, 7),
+(8, 8),
+(9, 9),
+(10, 10),
+(11, 11),
+(12, 12),
+(13, 13),
+(14, 14),
+(15, 15),
+(16, 16),
+(17, 17),
+(18, 18),
+(19, 19),
+(20, 20); 
