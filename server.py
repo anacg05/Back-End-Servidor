@@ -4,6 +4,7 @@ from http.server import SimpleHTTPRequestHandler, HTTPServer
 import mysql.connector
 import datetime
 import decimal
+from urllib.parse import parse_qs
 
 # 🔹 Conexão com o banco MySQL
 mydb = mysql.connector.connect(
@@ -22,39 +23,22 @@ def carregar_filmes():
             f.titulo,
             f.tempo_duracao,
             f.ano,
-            GROUP_CONCAT(DISTINCT l.linguagem SEPARATOR ', ') AS linguagem,
-            GROUP_CONCAT(DISTINCT g.genero SEPARATOR ', ') AS genero,
-            GROUP_CONCAT(DISTINCT p.produtora SEPARATOR ', ') AS produtora,
-            GROUP_CONCAT(DISTINCT pa.pais SEPARATOR ', ') AS pais,
-            GROUP_CONCAT(DISTINCT CONCAT(d.nome, ' ', d.sobrenome) SEPARATOR ', ') AS diretor,
-            GROUP_CONCAT(DISTINCT CONCAT(a.nome, ' ', a.sobrenome) SEPARATOR ', ') AS atores
+            l.linguagem AS linguagem
         FROM Filme f
         LEFT JOIN Linguagem l ON f.id_linguagem = l.id_linguagem
-        LEFT JOIN Filme_Genero fg ON f.id_filme = fg.id_filme
-        LEFT JOIN Genero g ON fg.id_genero = g.id_genero
-        LEFT JOIN Filme_Produtora fp ON f.id_filme = fp.id_filme
-        LEFT JOIN Produtora p ON fp.id_produtora = p.id_produtora
-        LEFT JOIN Filme_Pais fp2 ON f.id_filme = fp2.id_filme
-        LEFT JOIN Pais pa ON fp2.id_pais = pa.id_pais
-        LEFT JOIN Filme_Diretor fd ON f.id_filme = fd.id_filme
-        LEFT JOIN Diretor d ON fd.id_diretor = d.id_diretor
-        LEFT JOIN Filme_Ator fa ON f.id_filme = fa.id_filme
-        LEFT JOIN Ator a ON fa.id_ator = a.id_ator
-        GROUP BY f.id_filme
-        ORDER BY f.ano DESC;
+        ORDER BY f.id_filme ASC;
     """)
-    result = cursor.fetchall()
-    return result
+    return cursor.fetchall()
 
-# 🔹 Classe do servidor
+
+# 🔹 Classe principal do servidor
 class MyHandler(SimpleHTTPRequestHandler):
 
     def do_GET(self):
-        # ✅ Rota de API (JSON)
+        # ✅ API JSON de filmes
         if self.path == "/listar_filmes":
             try:
                 filmes = carregar_filmes()
-
                 def default_converter(obj):
                     if isinstance(obj, (datetime.date, datetime.datetime)):
                         return obj.isoformat()
@@ -63,17 +47,20 @@ class MyHandler(SimpleHTTPRequestHandler):
                     if isinstance(obj, decimal.Decimal):
                         return float(obj)
                     return str(obj)
-
                 self.send_response(200)
                 self.send_header("Content-type", "application/json; charset=utf-8")
                 self.end_headers()
-                self.wfile.write(json.dumps(filmes, ensure_ascii=False, default=default_converter).encode('utf-8'))
+                self.wfile.write(json.dumps(filmes, ensure_ascii=False, default=default_converter).encode("utf-8"))
             except Exception as e:
                 self.send_error(500, f"Erro ao carregar filmes: {str(e)}")
             return
 
+        # ✅ Página de sucesso
+        elif self.path.startswith("/sucesso"):
+            arquivo = "sucesso.html"
+
         # ✅ Roteamento das páginas HTML
-        if self.path == "/" or self.path == "/index.html":
+        elif self.path in ["/", "/index.html"]:
             arquivo = "index.html"
         elif self.path == "/cadastro":
             arquivo = "cadastro.html"
@@ -84,32 +71,78 @@ class MyHandler(SimpleHTTPRequestHandler):
         else:
             arquivo = self.path.lstrip("/")
 
-        # ✅ Servindo arquivos estáticos
         try:
             with open(arquivo, "rb") as f:
-                if arquivo.endswith(".html"):
-                    tipo = "text/html"
-                elif arquivo.endswith(".css"):
-                    tipo = "text/css"
-                elif arquivo.endswith(".js"):
-                    tipo = "application/javascript"
-                else:
-                    tipo = "application/octet-stream"
-
+                tipo = (
+                    "text/html" if arquivo.endswith(".html") else
+                    "text/css" if arquivo.endswith(".css") else
+                    "application/javascript" if arquivo.endswith(".js") else
+                    "application/octet-stream"
+                )
                 self.send_response(200)
                 self.send_header("Content-type", f"{tipo}; charset=utf-8")
                 self.end_headers()
                 self.wfile.write(f.read())
-
         except FileNotFoundError:
             self.send_error(404, f"Arquivo não encontrado: {arquivo}")
 
-# 🔹 Função principal
+    def do_POST(self):
+        if self.path == "/cadastro":
+            try:
+                # 📥 Lê o corpo da requisição
+                content_length = int(self.headers.get("Content-Length", 0))
+                post_data = self.rfile.read(content_length).decode("utf-8")
+                dados = parse_qs(post_data)
+
+                # 🧾 Captura os campos
+                titulo = dados.get("filme", [""])[0].strip()
+                tempo = dados.get("tempo", ["02:00:00"])[0].strip()
+                ano = dados.get("ano", [""])[0].strip()
+                linguagem = dados.get("linguagem", ["1"])[0].strip()
+
+                # 🧠 Validação
+                if not titulo or not ano:
+                    self.send_error(400, "Campos obrigatórios não preenchidos.")
+                    return
+                try:
+                    ano_int = int(ano)
+                except ValueError:
+                    self.send_error(400, "Ano inválido.")
+                    return
+
+                # 🚫 Verifica duplicação
+                cursor = mydb.cursor()
+                cursor.execute("SELECT id_filme FROM Filme WHERE titulo = %s AND ano = %s", (titulo, ano_int))
+                if cursor.fetchone():
+                    self.send_error(409, f"O filme '{titulo}' ({ano_int}) já está cadastrado.")
+                    return
+
+                # 💾 Insere novo filme
+                cursor.execute(
+                    "INSERT INTO Filme (titulo, tempo_duracao, ano, id_linguagem) VALUES (%s, %s, %s, %s)",
+                    (titulo, tempo, ano_int, linguagem)
+                )
+                mydb.commit()
+                id_filme = cursor.lastrowid
+
+                # 🔁 Redireciona para página de sucesso
+                self.send_response(303)
+                self.send_header("Location", f"/sucesso?id_filme={id_filme}")
+                self.end_headers()
+
+            except Exception as e:
+                self.send_error(500, f"Erro ao cadastrar filme: {str(e)}")
+        else:
+            self.send_error(404, f"Rota POST não encontrada: {self.path}")
+
+
+# 🔹 Inicialização do servidor
 def main():
     server_address = ('', 8000)
     httpd = HTTPServer(server_address, MyHandler)
     print("✅ Servidor rodando em http://localhost:8000")
     httpd.serve_forever()
+
 
 if __name__ == "__main__":
     main()

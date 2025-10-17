@@ -1,7 +1,6 @@
 async function carregarFilmes() {
   try {
-    // Agora busca na rota correta (API JSON)
-    const resposta = await fetch("/listar_filmes");
+    const resposta = await fetch("/listar_filmes"); // pega os dados do servidor
     const filmes = await resposta.json();
 
     const container = document.getElementById("listaFilmes");
@@ -23,13 +22,8 @@ async function carregarFilmes() {
 
       card.innerHTML = `
         <h3>${f.titulo} <span class="anoFilme">(${f.ano})</span></h3>
-        <p><strong>Diretor:</strong> ${f.diretor}</p>
-        <p><strong>Atores:</strong> ${f.atores}</p>
-        <p><strong>Gênero:</strong> ${f.genero}</p>
-        <p><strong>Idioma:</strong> ${f.linguagem}</p>
-        <p><strong>País:</strong> ${f.pais}</p>
-        <p><strong>Produtora:</strong> ${f.produtora}</p>
         <p><strong>Duração:</strong> ${f.tempo_duracao}</p>
+        <p><strong>Idioma:</strong> ${f.linguagem}</p>
       `;
 
       container.appendChild(card);
@@ -37,6 +31,13 @@ async function carregarFilmes() {
 
   } catch (erro) {
     console.error("Erro ao carregar filmes:", erro);
+    const container = document.getElementById("listaFilmes");
+    container.innerHTML = `
+      <article class="mensagemVazia">
+        <p>⚠️ Ocorreu um erro ao carregar os filmes.</p>
+        <p>Tente atualizar a página.</p>
+      </article>
+    `;
   }
 }
 

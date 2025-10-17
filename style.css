@@ -1,24 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
 /* ===== VARIÁVEIS ===== */
 :root {
-  --primary-color: #58048f;
-  /* Roxo */
-  --secondary-color: #2c3e50;
-  /* Azul escuro */
-  --accent-color: #bb26e8;
-  /* Laranja */
-  --background-color: #f4f4f9;
-  /* Fundo claro */
-  --card-color: #ffffff;
-  /* Cards */
-  --text-color: #2d3436;
-  /* Texto padrão */
-  --muted-color: #7f8c8d;
-  /* Cinza secundário */
-  --border-color: #e0e0e0;
-  --shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  --primary-color: #ba0d15;       /* Vermelho Netflix */
+  --secondary-color: #221f1f;     /* Preto escuro / fundo */
+  --accent-color: #7b0309;        /* Vinho intenso */
+  --background-color: #242424;    /* Fundo principal */
+  --card-color: #3e3e3e;          /* Fundo dos cards */
+  --text-color: #ffffff;          /* Texto principal branco */
+  --muted-color: #b3b3b3;         /* Texto secundário (cinza claro) */
+  --border-color: #333333;        /* Bordas suaves */
+  --shadow: 0px 4px 12px rgba(0, 0, 0, 0.6);
+  --linear: linear-gradient(#7b0309, #a3010a);
 }
 
 /* ===== REGRAS GERAIS ===== */
@@ -39,7 +33,7 @@ body {
 }
 
 header {
-  background: var(--primary-color);
+  background: linear-gradient(var(--primary-color), var(--accent-color));
   padding: 1.5rem 0;
   text-align: center;
   color: white;
@@ -47,15 +41,16 @@ header {
 }
 
 header h1 {
-  font-size: 40px;
-  font-family: 'Poopins', sans-serif;
+  font-size: 60px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 400;
   letter-spacing: 1px;
 }
 
 /* ===== TITULOS ===== */
 h2 {
   font-size: 2rem;
-  color: var(--secondary-color);
+  color: var(--text-color);
   margin-bottom: 1.5rem;
   font-weight: 500;
   border-left: 5px solid var(--primary-color);
@@ -72,20 +67,13 @@ h2 {
   box-shadow: var(--shadow);
   margin: 20px auto;
   width: 100%;
-  max-width: 70%;
+  max-width: 75%;
 }
 
 .containerPrincipal {
   padding: 2rem;
   border-radius: 12px;
   max-width: 40%;
-}
-
-.containerPrincipalCadastro {
-  background: var(--card-color);
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: var(--shadow);
 }
 
 /* ===== FORMULÁRIOS ===== */
@@ -116,7 +104,7 @@ fieldset {
 
 .labelFormulario {
   font-weight: 500;
-  color: var(--secondary-color);
+  color: var(--text-color);
   font-size: 1.1rem;
   margin-top: 15px;
 }
@@ -125,11 +113,15 @@ fieldset {
 .textareaFormulario {
   padding: 1rem;
   border: 2px solid var(--border-color);
+  background-color: #d1d1d1;
   border-radius: 30px;
   font-size: 1rem;
   transition: 0.3s ease;
   font-family: 'Poppins', sans-serif;
+}
 
+input::placeholder {
+  color: #333333;
 }
 
 .inputFormulario:focus,
@@ -172,7 +164,7 @@ button.botao {
   max-width: 300px;
   margin: 0 auto;
 
-  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  background: var(--linear);
   color: white;
   border: none;
   box-shadow: var(--shadow);
@@ -184,8 +176,7 @@ button.botao:hover {
   transform: translateY(-2px);
 }
 
-
-/* ===== BOTÕES (versão compacta) ===== */
+/* ===== BOTÕES PEQUENOS ===== */
 .botaoPequeno {
   display: inline-block;
   padding: 0.8rem 1.5rem;  
@@ -196,11 +187,9 @@ button.botao:hover {
   text-align: center;
   transition: 0.3s ease;
   cursor: pointer;
-
   width: 100%;
-  max-width: 90px;   /* mais estreito que o padrão */
-  margin: 0.5rem 0.2rem; /* espaço vertical entre botões */
-  
+  max-width: 90px;
+  margin: 0.5rem 0.2rem;
   background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
   color: white;
   border: none;
@@ -212,12 +201,11 @@ button.botao:hover {
   transform: translateY(-2px);
 }
 
-.acoesCard{
+.acoesCard {
   align-items: center;
   margin-left: 80px;
   margin-top: 10px;
 }
-
 
 /* ===== LINKS ===== */
 .linkEsqueceuSenha {
@@ -249,36 +237,13 @@ button.botao:hover {
 /* ===== RODAPÉ ===== */
 footer {
   text-align: center;
-  background: var(--primary-color);
+  background: linear-gradient(var(--primary-color), var(--accent-color));
   color: white;
   padding: 1.5rem;
   margin-top: auto;
   font-size: 0.9rem;
   letter-spacing: 0.5px;
   border-top: 2px solid var(--secondary-color);
-}
-
-/* ===== RESPONSIVIDADE ===== */
-@media (max-width: 768px) {
-  .containerPrincipalCadastro {
-    grid-template-columns: 1fr;
-  }
-
-  h2 {
-    font-size: 1.8rem;
-  }
-
-  header h1 {
-    font-size: 2rem;
-  }
-
-  .botaoPrimario,
-  .botaoSecundario,
-  button.botaoPrimario,
-  button.botaoSecundario {
-    font-size: 1rem;
-    max-width: 100%;
-  }
 }
 
 /* ===== CARDS DE FILMES ===== */
@@ -290,7 +255,7 @@ footer {
 }
 
 .cardFilme {
-  background: var(--card-color);
+  background: #484848;
   border: 2px solid var(--border-color);
   border-radius: 12px;
   padding: 0.7rem;
@@ -310,19 +275,83 @@ footer {
 
 .cardFilme h3 {
   font-size: 1.5rem;
-  color: var(--primary-color);
+  color: #ffffff;
   margin-bottom: 0.7rem;
   padding-bottom: 5px;
-  border-bottom: 2px solid #e2e8f0;
+  border-bottom: 2px solid #f35961;
 }
 
 .cardFilme .anoFilme {
   font-size: 1rem;
-  color: var(--muted-color);
+  color: #dfdfdf;
 }
 
 .cardFilme p {
   margin: 0.2rem 0;
   font-size: 0.95rem;
   color: var(--text-color);
+}
+
+.cardFilme p strong {
+  color: #ff757c;
+}
+
+/* ===== PÁGINA DE SUCESSO ===== */
+.containerSucesso {
+  background-color: var(--card-color);
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  max-width: 600px;
+  width: 90%;
+  margin: auto;
+}
+
+h1.sucesso {
+  color: var(--primary-color);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.8rem;
+  margin-bottom: 25px;
+  letter-spacing: 1px;
+}
+
+.dadosFilme {
+  text-align: left;
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #2b2b2b;
+  border-radius: 12px;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4);
+}
+
+.dadosFilme strong {
+  color: var(--primary-color);
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+  .containerPrincipalCadastro {
+    grid-template-columns: 1fr;
+  }
+
+  h2 {
+    font-size: 1.8rem;
+  }
+
+  header h1 {
+    font-size: 2rem;
+  }
+
+  .botao {
+    max-width: 100%;
+  }
+
+  .containerSucesso {
+    padding: 25px;
+  }
+
+  h1.sucesso {
+    font-size: 2.2rem;
+  }
 }
