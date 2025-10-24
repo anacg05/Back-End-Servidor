@@ -23,7 +23,9 @@ def carregar_filmes():
             f.titulo,
             f.tempo_duracao,
             f.ano,
-            l.linguagem AS linguagem
+            l.linguagem AS linguagem,
+            f.id_linguagem,
+            f.poster
         FROM Filme f
         LEFT JOIN Linguagem l ON f.id_linguagem = l.id_linguagem
         ORDER BY f.id_filme ASC;
@@ -35,7 +37,6 @@ def carregar_filmes():
 class MyHandler(SimpleHTTPRequestHandler):
 
     def do_GET(self):
-        # ✅ API JSON de filmes
         if self.path == "/listar_filmes":
             try:
                 filmes = carregar_filmes()
@@ -55,11 +56,10 @@ class MyHandler(SimpleHTTPRequestHandler):
                 self.send_error(500, f"Erro ao carregar filmes: {str(e)}")
             return
 
-        # ✅ Página de sucesso
-        elif self.path.startswith("/sucesso"):
+
+        elif self.path == "/sucesso" or self.path.startswith("/sucesso?"):
             arquivo = "sucesso.html"
 
-        # ✅ Roteamento das páginas HTML
         elif self.path in ["/", "/index.html"]:
             arquivo = "index.html"
         elif self.path == "/cadastro":
@@ -89,18 +89,17 @@ class MyHandler(SimpleHTTPRequestHandler):
     def do_POST(self):
         if self.path == "/cadastro":
             try:
-                # 📥 Lê o corpo da requisição
                 content_length = int(self.headers.get("Content-Length", 0))
                 post_data = self.rfile.read(content_length).decode("utf-8")
                 dados = parse_qs(post_data)
 
-                # 🧾 Captura os campos
                 titulo = dados.get("filme", [""])[0].strip()
                 tempo = dados.get("tempo", ["02:00:00"])[0].strip()
                 ano = dados.get("ano", [""])[0].strip()
                 linguagem = dados.get("linguagem", ["1"])[0].strip()
+                poster = dados.get("poster", [""])[0].strip() 
 
-                # 🧠 Validação
+             
                 if not titulo or not ano:
                     self.send_error(400, "Campos obrigatórios não preenchidos.")
                     return
@@ -110,22 +109,21 @@ class MyHandler(SimpleHTTPRequestHandler):
                     self.send_error(400, "Ano inválido.")
                     return
 
-                # 🚫 Verifica duplicação
+       
                 cursor = mydb.cursor()
                 cursor.execute("SELECT id_filme FROM Filme WHERE titulo = %s AND ano = %s", (titulo, ano_int))
                 if cursor.fetchone():
                     self.send_error(409, f"O filme '{titulo}' ({ano_int}) já está cadastrado.")
                     return
 
-                # 💾 Insere novo filme
+             
                 cursor.execute(
-                    "INSERT INTO Filme (titulo, tempo_duracao, ano, id_linguagem) VALUES (%s, %s, %s, %s)",
-                    (titulo, tempo, ano_int, linguagem)
+                    "INSERT INTO Filme (titulo, tempo_duracao, ano, id_linguagem, poster) VALUES (%s, %s, %s, %s, %s)",
+                    (titulo, tempo, ano_int, linguagem, poster)
                 )
                 mydb.commit()
                 id_filme = cursor.lastrowid
 
-                # 🔁 Redireciona para página de sucesso
                 self.send_response(303)
                 self.send_header("Location", f"/sucesso?id_filme={id_filme}")
                 self.end_headers()

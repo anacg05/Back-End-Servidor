@@ -136,6 +136,11 @@ input::placeholder {
   resize: vertical;
 }
 
+
+
+
+
+
 /* ===== BOTOES ===== */
 .botaoContainer,
 .botoesCadastro,
@@ -249,23 +254,25 @@ footer {
 /* ===== CARDS DE FILMES ===== */
 .listaFilmes {
   display: grid;
-  grid-template-columns: repeat(2, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-top: 2rem;
+  grid-template-columns: repeat(4, minmax(200px, 2fr));
+  margin-right: 20px;
+  gap: 10px;
 }
+
 
 .cardFilme {
   background: #484848;
   border: 2px solid var(--border-color);
   border-radius: 12px;
+  width: 100%;
+  
+  margin: 10px;
   padding: 0.7rem;
   box-shadow: var(--shadow);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  max-height: 500px;
-  overflow-y: auto;
 }
 
 .cardFilme:hover {
@@ -274,7 +281,7 @@ footer {
 }
 
 .cardFilme h3 {
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   color: #ffffff;
   margin-bottom: 0.7rem;
   padding-bottom: 5px;
@@ -354,4 +361,28 @@ h1.sucesso {
   h1.sucesso {
     font-size: 2.2rem;
   }
+}
+
+.cardPoster {
+  width: 100%;
+  height: auto; 
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  background-color: var(--secondary-color);
+
+}
+
+.posterSucessoContainer {
+  margin: 0 auto 1.5rem auto;
+  width: 100%;
+  max-width: 250px;
+}
+
+.posterSucessoContainer img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  background-color: var(--secondary-color);
 }

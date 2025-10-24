@@ -20,30 +20,32 @@
       <form action="/cadastro" method="post">
         <div class="formularioCadastro">
           <div class="colunaCadastro">
-            <!-- Título -->
             <fieldset class="campoFormulario">
               <label for="filme" class="labelFormulario">Título do Filme:</label>
               <input type="text" id="filme" name="filme" class="inputFormulario" placeholder="Digite o título do filme"
                 required />
             </fieldset>
 
-            <!-- Duração -->
             <fieldset class="campoFormulario">
               <label for="tempo" class="labelFormulario">Duração:</label>
-              <input type="time" id="tempo" name="tempo" class="inputFormulario" step="60" required />
+              <input type="time" id="tempo" name="tempo" class="inputFormulario" step="1" required />
+            </fieldset>
+
+            <fieldset class="campoFormulario">
+              <label for="poster" class="labelFormulario">URL do Poster:</label>
+              <input type="text" id="poster" name="poster" class="inputFormulario"
+                placeholder="https://... (link da imagem)" />
             </fieldset>
           </div>
 
 
           <div class="colunaCadastro">
-            <!-- Ano -->
             <fieldset class="campoFormulario">
               <label for="ano" class="labelFormulario">Ano:</label>
               <input type="number" id="ano" name="ano" class="inputFormulario" min="1900" max="2025"
                 placeholder="Ano de lançamento" required />
             </fieldset>
 
-            <!-- Linguagem -->
             <fieldset class="campoFormulario">
               <label for="linguagem" class="labelFormulario">Linguagem:</label>
               <select id="linguagem" name="linguagem" class="inputFormulario" required>
@@ -73,7 +75,6 @@
           </div>
         </div>
 
-        <!-- Botões -->
         <div class="botoesCadastro">
           <button type="submit" class="botao">Cadastrar Filme</button>
           <a href="/listarfilmes" class="botao">Ver Filmes Cadastrados</a>
